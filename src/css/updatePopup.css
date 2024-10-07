@@ -1,0 +1,53 @@
+.modal-window-db_update-popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    z-index: 100000;
+}
+
+.modal-window-db_update-popup__scale-cont {
+    position: absolute;
+    width: 1300px;
+    height: 840px;
+    transform: scale(0.7);
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.modal-window-db_update-popup__back {
+    position: absolute;
+    width: 1300px;
+    height: 840px;
+}
+
+.modal-window-db_update-popup__cross_icon {
+    position: absolute;
+    z-index: 1;
+    top: 70px;
+    right: 160px;
+    cursor: pointer;
+    width: 45px;
+}
+.modal-window-db_update-popup__content-container {
+    position: absolute;
+    width: 915px;
+    height: 530px;
+    z-index: 2;
+    top: 140px;
+    left: 50px;
+    display: flex;
+}
+
+.modal-window-db_update-popup__popup_btn {
+    position: absolute;
+    width: 400px;
+    height: 100px;
+    bottom: -120px;
+    left: 42%;
+    /* transform: translateX(-50%); */
+    cursor: pointer;
+}
