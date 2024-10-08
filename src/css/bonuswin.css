@@ -1,6 +1,5 @@
 .modal-window-bonus {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -103,5 +102,19 @@
     bottom: 50px;
     z-index: 10;
     top: 72%;
+    cursor: pointer;
+}
+
+.modal-window-bonus-tab {
+    display: flex;
+    flex-direction: column;
+    width: 650px;
+}
+
+.modal-window-bonus-tab > img {
+    width: fit-content;
+}
+
+.tab-transition {
     cursor: pointer;
 }

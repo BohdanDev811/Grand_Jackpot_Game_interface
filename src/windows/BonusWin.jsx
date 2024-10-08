@@ -1,17 +1,17 @@
 import React from "react";
-import {EE} from "../App";
+import { EE } from "../App";
 import "../css/bonuswin.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import Slider from "react-slick";
-import {PAGE_SIZE_DEFAULT} from "../common/Config";
+import { PAGE_SIZE_DEFAULT } from "../common/Config";
 
 export class BonusWin extends React.Component {
     constructor(props) {
         super(props);
         this.onClose = this.onClose.bind(this);
-        this.state = {};
+        this.state = { DailyTab: true };
     }
 
     componentDidMount() {
@@ -73,8 +73,12 @@ export class BonusWin extends React.Component {
     render() {
         return (
             <div className="modal-window-bonus">
+                    <div className="modal-window-bonus-tab">
+                        <img src="images/frenzy/bonus/daily_tab_active.png" alt="" />
+                        <img className="tab-transition" src="images/frenzy/bonus/to_weekly_tab.png" alt="" />
+                    </div>
                 <div className="modal-window-bonus__scale-cont">
-                    <img
+                    {/* <img
                         className="modal-window-bonus__close"
                         onClick={this.onClose}
                         src="images/frenzy/bonus_close_2.png"
@@ -87,7 +91,7 @@ export class BonusWin extends React.Component {
                             alt=""
                             className="carousel__item"
                         />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         );
