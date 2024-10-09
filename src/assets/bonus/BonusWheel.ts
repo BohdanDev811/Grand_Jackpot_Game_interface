@@ -4,17 +4,20 @@ import { EE } from "../../App";
 import { PAGE_SIZE_DEFAULT } from "../../common/Config";
 
 export class BonusWheel extends PIXI.Sprite {
-	title : PIXI.Sprite = new PIXI.Sprite();
+	title: PIXI.Sprite = new PIXI.Sprite();
 	close: PIXI.Sprite = new PIXI.Sprite();
 	black: PIXI.Graphics = new PIXI.Graphics();
 	cont: PIXI.Sprite = new PIXI.Sprite();
-	conttitle: PIXI.Sprite = new PIXI.Sprite();
+	conttitle: any = new PIXI.Sprite();
 	line: any = new PIXI.Sprite();
 	button: PIXI.Sprite = new PIXI.Sprite();
 	back: PIXI.Sprite = new PIXI.Sprite();
 	data: any = new PIXI.Sprite();
 	text2: PIXI.Sprite = new PIXI.Sprite();
-	trunc: PIXI.Sprite = new PIXI.Sprite();
+	// trunc: PIXI.Sprite = new PIXI.Sprite();
+	help: PIXI.Sprite = new PIXI.Sprite();
+	remainder: any = new PIXI.Sprite();
+	progressPanel: PIXI.Sprite = new PIXI.Sprite()
 
 	HIDE_BONUS: any = null;
 
@@ -30,8 +33,6 @@ export class BonusWheel extends PIXI.Sprite {
 
 	async build() {
 
-		this.title = this.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/popup_title_daily.png")));
-		this.title.x = -200;
 		//
 		this.addChild(this.black);
 		this.cont = this.addChild(new PIXI.Sprite());
@@ -55,9 +56,28 @@ export class BonusWheel extends PIXI.Sprite {
 		this.data = this.conttitle.addChild(new BonusData());
 		this.data.x = -160;
 
+		this.remainder = this.conttitle.addChild(new RemainingTime());
+		this.remainder.x = -160;
+		this.remainder.y = 850;
+
+		this.progressPanel = this.line.addChild(new ProgressPanel);
+		this.progressPanel.x = -500;
+
 		//detailed task for weeekly bonus
-		this.text2 = this.conttitle.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus_text.png")));
-		this.text2.x = -307;
+		// this.text2 = this.conttitle.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus_text.png")));
+		// this.text2.x = -307;
+
+		this.title = this.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/popup_title_daily.png")));
+		this.title.x = 800;
+		this.title.y = 110
+		this.title.width = 570
+		this.title.height = 130
+
+		this.help = this.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/help.png")))
+		this.help.x = 1350
+		this.help.y = 140
+		this.help.width = 80
+		this.help.height = 80
 
 		this.close = this.conttitle.addChild(new ButtonItem("images/frenzy/bonus_close.png", () => {
 			if (this.HIDE_BONUS) this.HIDE_BONUS();
@@ -68,7 +88,8 @@ export class BonusWheel extends PIXI.Sprite {
 		//TODO:
 		const curday = 3;
 		this.line.setStep(curday);
-		this.data.setDay(curday);
+		this.data.setDay(327242.54);
+		this.remainder.setUserCnt(101)
 
 		EE.addListener("RESIZE", this.onResize);
 		this.on('removed ', this.removed);
@@ -90,11 +111,17 @@ export class BonusWheel extends PIXI.Sprite {
 		this.cont.y = (data.h / data.scale) - 550;
 		this.back.y = -(data.h / data.scale) / 2 + 100;
 		this.close.y = (data.h / data.scale) / 2 - 350;
-		this.trunc.y = (data.h / data.scale) / 2 - 360;
+		// this.trunc.y = (data.h / data.scale) / 2 - 360;
 		this.line.y = (data.h / data.scale) / 2 - 80;
 		this.data.y = (data.h / data.scale) / 2 + 75;
 		this.button.y = (data.h / data.scale) / 2 + 130;
-		this.text2.y = (data.h / data.scale) / 2 + 260;
+		// this.text2.y = (data.h / data.scale) / 2 + 260;
+		this.title.y = (data.h / data.scale) / 2 - 430
+		this.title.x = (data.w / data.scale) / 2 - 350
+		this.help.x = (data.w / data.scale) / 2 + 200
+		this.help.y = (data.h / data.scale) / 2 - 400
+		this.remainder.y = (data.h / data.scale) / 2 + 300;
+
 	}
 
 }
@@ -220,7 +247,7 @@ class BonusData extends PIXI.Sprite {
 
 		const style = new PIXI.TextStyle({
 			fontFamily: "Bronzier",
-			fontSize: "33px",
+			fontSize: "53px",
 			fill: [
 				"#FFDDFD",
 				"#FF64F6",
@@ -236,9 +263,11 @@ class BonusData extends PIXI.Sprite {
 		this.cont = this.addChild(new PIXI.Sprite());
 
 		//background image for weekly task 👇
-		const back = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus_back_info.png")));
-		back.x = 0;
-		back.y = 0;
+		const back = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/total_coin_bg.png")));
+		back.x = -100;
+		back.y = 120;
+		back.width = 400
+		back.height = 80
 
 		this.task = this.cont.addChild(new PIXI.Text("", style));
 		this.task.y = 10;
@@ -249,8 +278,142 @@ class BonusData extends PIXI.Sprite {
 	}
 
 	setDay(num: number) {
-		this.task.text = `Login For 7 Days (${num}/7)`;
-		this.task.x = 165 - (this.task.width / 2);
+		this.task.text = `${num}`;
+		this.task.x = - (this.task.width / 2) + 100;
+		this.task.y = 131
+
+	}
+
+	removed() {
+		//EE.removeListener("TICKER", this.onSelectWheelAnimate);
+		this.cont.removeChildren();
+	}
+
+}
+
+
+/**
+ * Bar for remaining time
+ */
+class RemainingTime extends PIXI.Sprite {
+	cont: PIXI.Sprite;
+	task: PIXI.Text;
+	remain: PIXI.Text;
+
+	constructor() {
+		super();
+		this.removed = this.removed.bind(this);
+		this.setDay = this.setDay.bind(this);
+		this.setUserCnt = this.setUserCnt.bind(this);
+
+		const style = new PIXI.TextStyle({
+			fontFamily: "Bronzier",
+			fontSize: "53px",
+			fill: [
+				"#FFDDFD",
+				"#FF64F6",
+			],
+			dropShadow: true,
+			dropShadowBlur: 1,
+			dropShadowColor: "#000000",
+			dropShadowDistance: 3,
+			align: "center",
+		});
+		//
+
+		this.cont = this.addChild(new PIXI.Sprite());
+
+		//background image for weekly task 👇
+		const back = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/remaining_time_bg.png")));
+		back.x = -185;
+		back.y = -30;
+		back.width = 600
+		back.height = 90
+
+		this.task = this.cont.addChild(new PIXI.Text("", style));
+		this.task.y = -13
+
+		this.remain = this.cont.addChild(new PIXI.Text("", style));
+		this.remain.y = -13
+
+		this.setDay("3D, 11:31:56");
+		this.setUserCnt(101)
+
+		this.on('removed ', this.removed);
+	}
+
+	setDay(num: String) {
+		this.task.text = `${num}`;
+		this.task.x = - (this.task.width / 2) + 50;
+
+	}
+
+	setUserCnt(num: Number) {
+		this.remain.text = `${num}`
+		this.remain.x = this.remain.width + 210
+	}
+
+	removed() {
+		//EE.removeListener("TICKER", this.onSelectWheelAnimate);
+		this.cont.removeChildren();
+	}
+
+}
+
+
+/**
+ * Bar for remaining time
+ */
+class ProgressPanel extends PIXI.Sprite {
+	cont: PIXI.Sprite;
+	isDaily: boolean = true; // whether daily or weekly
+	standard = {
+		weekly: [24, 500, 300, 300, 5],
+		daily: [4, 6000, 5000, 5000, 150]
+	}
+	input = [10, 10, 10, 10, 10]
+
+	constructor() {
+		super();
+		this.removed = this.removed.bind(this);
+		this.setIsDaily = this.setIsDaily.bind(this);
+		this.setInput = this.setInput.bind(this);
+
+		// const style = new PIXI.TextStyle({
+		// 	fontFamily: "Bronzier",
+		// 	fontSize: "53px",
+		// 	fill: [
+		// 		"#FFDDFD",
+		// 		"#FF64F6",
+		// 	],
+		// 	dropShadow: true,
+		// 	dropShadowBlur: 1,
+		// 	dropShadowColor: "#000000",
+		// 	dropShadowDistance: 3,
+		// 	align: "center",
+		// });
+		//
+
+		this.cont = this.addChild(new PIXI.Sprite());
+
+		//background image for weekly task 👇
+		const back = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${this.isDaily ? "daily" : "weekly"}_progress_bar.png`)));
+		back.width = 600
+		back.y = - 500
+		back.height = 1000
+
+		
+
+
+		this.on('removed ', this.removed);
+	}
+
+	setInput(num: number[]) {
+		this.input = [...num];
+	}
+
+	setIsDaily(sort: boolean) {
+		this.isDaily = sort
 	}
 
 	removed() {
