@@ -60,15 +60,16 @@ class App extends React.Component<{}, { MESSAGE: string }> {
 					(preloaderbase[0] as any).style.setProperty("display", "none");
 					(preloaderbase[0] as any).parentNode.removeChild((preloaderbase[0] as any));
 					//setup();
-					EE.emit('SHOW_UPDATE_POPUP');
+					// EE.emit('SHOW_UPDATE_POPUP');
 					// EE.emit('CLEAR_TOP_WINDOWS');
-					//EE.emit('SHOW_LOGIN');
+					// EE.emit('SHOW_LOGIN');
 					// EE.emit('SHOW_ADV');
 					// EE.emit('SHOW_MAINTEN');
 					//EE.emit('PAGE_INFO');
 					//EE.emit('SHOW_REG');
 					//EE.emit('SHOW_FREE_PLAY');
 					//EE.emit('SHOW_SIGNPHONE');
+					EE.emit('GO_GAME')
 				}, 1000);
 			}
 
