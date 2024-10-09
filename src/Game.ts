@@ -6,7 +6,7 @@ import {Hub} from "./assets/screens/Hub";
 import {HubIcons3} from "./assets/screens/HubIcons3";
 import {EE} from "./App";
 //import {HubRight} from "./assets/screens/elements/HubRight";
-// import { BonusWheel } from "./assets/bonus/BonusWheel";
+import { BonusWheel } from "./assets/bonus/BonusWheel";
 
 /**
  * main stage
@@ -83,13 +83,13 @@ function createHub() {
 }
 
 function showBonusWheel() {
-    // maincontainer.visible = false;
-    // topcontainer.removeChildren();
-    // topcontainer.addChild(new BonusWheel(hideBonus));
-    EE.emit("SHOW_BONUS");
+    maincontainer.visible = true;
+    topcontainer.removeChildren();
+    topcontainer.addChild(new BonusWheel(hideBonus));
+    // EE.emit("SHOW_BONUS");
 }
 
-// function hideBonus() {
-// 	maincontainer.visible = true;
-// 	topcontainer.removeChildren();
-// }
+function hideBonus() {
+	maincontainer.visible = true;
+	topcontainer.removeChildren();
+}

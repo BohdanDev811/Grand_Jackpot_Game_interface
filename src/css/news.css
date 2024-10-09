@@ -21,7 +21,7 @@
 .modal-window-news__scale-cont .slick-list {
     border: 10px solid #ecdc82;
     border-radius: 80px;
-    height: 800px;
+    /* height: 800px; */
 }
 
 .modal-window-news__scale-cont .slick-slider .slick-dots {

@@ -1,7 +1,7 @@
 import React from "react";
 
-const DailyBonus = () =>{
-    return(<div>
+const DailyBonus = () => {
+    return (<div>
 
     </div>)
 }

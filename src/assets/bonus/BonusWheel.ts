@@ -1,22 +1,24 @@
 import * as PIXI from "pixi.js";
-import {ButtonItem} from "../gui/ButtonItem";
+import { ButtonItem } from "../gui/ButtonItem";
 import { EE } from "../../App";
+import { PAGE_SIZE_DEFAULT } from "../../common/Config";
 
-export class BonusWheel extends PIXI.Sprite{
+export class BonusWheel extends PIXI.Sprite {
+	title : PIXI.Sprite = new PIXI.Sprite();
 	close: PIXI.Sprite = new PIXI.Sprite();
 	black: PIXI.Graphics = new PIXI.Graphics();
 	cont: PIXI.Sprite = new PIXI.Sprite();
 	conttitle: PIXI.Sprite = new PIXI.Sprite();
-	line:any = new PIXI.Sprite();
+	line: any = new PIXI.Sprite();
 	button: PIXI.Sprite = new PIXI.Sprite();
 	back: PIXI.Sprite = new PIXI.Sprite();
 	data: any = new PIXI.Sprite();
 	text2: PIXI.Sprite = new PIXI.Sprite();
 	trunc: PIXI.Sprite = new PIXI.Sprite();
 
-	HIDE_BONUS:any = null;
+	HIDE_BONUS: any = null;
 
-	constructor(hideBonus:any) {
+	constructor(hideBonus: any) {
 		super();
 		//
 		this.HIDE_BONUS = hideBonus;
@@ -27,6 +29,9 @@ export class BonusWheel extends PIXI.Sprite{
 	}
 
 	async build() {
+
+		this.title = this.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/popup_title_daily.png")));
+		this.title.x = -200;
 		//
 		this.addChild(this.black);
 		this.cont = this.addChild(new PIXI.Sprite());
@@ -35,26 +40,30 @@ export class BonusWheel extends PIXI.Sprite{
 		this.line = this.conttitle.addChild(new BonusLine());
 		this.line.x = -500;
 
-		this.back = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus_fon.png")));
-		this.back.x = -550;
+		this.back = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/bonus_bg.png")));
+		this.back.x = -([PAGE_SIZE_DEFAULT.width / 2 - 100]);
+		this.back.width = PAGE_SIZE_DEFAULT.width - 200;
+		this.back.height = PAGE_SIZE_DEFAULT.height - 200;
 
-		this.button = this.conttitle.addChild(new ButtonItem("images/frenzy/bonus_btn.png", ()=>{
-			alert('collect')
-		}));
-		this.button.x = -155;
+		// this.button = this.conttitle.addChild(new ButtonItem("images/frenzy/bonus_btn.png", () => {
+		// 	alert('collect')
+		// }));
+		// this.button.x = -155;
 
-		this.trunc = this.conttitle.addChild(new Trunc());
-		this.trunc.x = -430;
+		// this.trunc = this.conttitle.addChild(new Trunc());
+		// this.trunc.x = -430;
 		this.data = this.conttitle.addChild(new BonusData());
 		this.data.x = -160;
 
+		//detailed task for weeekly bonus
 		this.text2 = this.conttitle.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus_text.png")));
 		this.text2.x = -307;
 
-		this.close = this.conttitle.addChild(new ButtonItem("images/frenzy/bonus_close.png", ()=>{
-			if(this.HIDE_BONUS) this.HIDE_BONUS();
+		this.close = this.conttitle.addChild(new ButtonItem("images/frenzy/bonus_close.png", () => {
+			if (this.HIDE_BONUS) this.HIDE_BONUS();
 		}));
-		this.close.x = 380;
+		this.close.x = (PAGE_SIZE_DEFAULT.width / 2) + 30;
+		this.close.y = PAGE_SIZE_DEFAULT.height / 2 + 500
 
 		//TODO:
 		const curday = 3;
@@ -72,78 +81,86 @@ export class BonusWheel extends PIXI.Sprite{
 		this.cont.removeChildren();
 	}
 
-	onResize(data:any) {
+	onResize(data: any) {
 		this.black.clear();
-		this.black.beginFill(0x000000, 0.8).drawRect(0,0,(data.w/data.scale),(data.h/data.scale)).endFill();
-		this.conttitle.x = (data.w/data.scale)/2;
+		this.black.beginFill(0x000000, 0.8).drawRect(0, 0, (data.w / data.scale), (data.h / data.scale)).endFill();
+		this.conttitle.x = (data.w / data.scale) / 2;
 		this.conttitle.y = 50;
-		this.cont.x = (data.w/data.scale)/2;
-		this.cont.y = (data.h/data.scale) - 550;
-		this.back.y = -(data.h/data.scale)/2 + 100;
-		this.close.y = (data.h/data.scale)/2 - 350;
-		this.trunc.y = (data.h/data.scale)/2 - 360;
-		this.line.y = (data.h/data.scale)/2 - 80;
-		this.data.y = (data.h/data.scale)/2 + 75;
-		this.button.y = (data.h/data.scale)/2 + 130;
-		this.text2.y = (data.h/data.scale)/2 + 260;
+		this.cont.x = (data.w / data.scale) / 2;
+		this.cont.y = (data.h / data.scale) - 550;
+		this.back.y = -(data.h / data.scale) / 2 + 100;
+		this.close.y = (data.h / data.scale) / 2 - 350;
+		this.trunc.y = (data.h / data.scale) / 2 - 360;
+		this.line.y = (data.h / data.scale) / 2 - 80;
+		this.data.y = (data.h / data.scale) / 2 + 75;
+		this.button.y = (data.h / data.scale) / 2 + 130;
+		this.text2.y = (data.h / data.scale) / 2 + 260;
 	}
 
 }
 
-class Trunc extends PIXI.Sprite{
-	cont:PIXI.Sprite;
+/**
+ * bonus box of jwelery
+ */
+// class Trunc extends PIXI.Sprite {
+// 	cont: PIXI.Sprite;
 
-	/**
-	 * New tag icon
-	 */
-	constructor() {
-		super();
-		//
-		this.cont = this.addChild(new PIXI.Sprite());
-		const json0 = PIXI.Loader.shared.resources["images/frenzy/anim/trunc.json"].spritesheet;
-		const array0:any = [];
-		if(json0) {
-			Object.keys(json0.textures).sort().forEach((key) => {
-				array0.push(json0.textures[key]);
-			});
-		}
+// 	/**
+// 	 * New tag icon
+// 	 */
+// 	constructor() {
+// 		super();
+// 		//
+// 		this.cont = this.addChild(new PIXI.Sprite());
+// 		const json0 = PIXI.Loader.shared.resources["images/frenzy/anim/trunc.json"].spritesheet;
+// 		const array0: any = [];
+// 		if (json0) {
+// 			Object.keys(json0.textures).sort().forEach((key) => {
+// 				array0.push(json0.textures[key]);
+// 			});
+// 		}
 
-		const animate0 = new PIXI.AnimatedSprite(array0);
-		animate0.animationSpeed = 0.2;
-		animate0.loop = true;
-		//animate0.y = -3;
-		this.cont.addChild(animate0);
-		animate0.play();
+// 		const animate0 = new PIXI.AnimatedSprite(array0);
+// 		animate0.animationSpeed = 0.2;
+// 		animate0.loop = true;
+// 		//animate0.y = -3;
+// 		this.cont.addChild(animate0);
+// 		animate0.play();
 
-	}
+// 	}
 
-}
+// }
 
-class BonusLine extends PIXI.Sprite{
-	cont:PIXI.Sprite;
-	addItems:any = {};
+/**
+ * Background of bonus stars
+ */
+class BonusLine extends PIXI.Sprite {
+	cont: PIXI.Sprite;
+	addItems: any = {};
 	constructor() {
 		super();
 		this.removed = this.removed.bind(this);
 		this.setStep = this.setStep.bind(this);
 		//
 		this.cont = this.addChild(new PIXI.Sprite());
-		this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus_back.png")));
+		// this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus_back.png")));
 
-		let xx = 90;
-		for(let i=0;i<7;i++) {
+		let xx = 50;
+		for (let i = 0; i < 6; i++) {
 			const itm = this.cont.addChild(new BonusItem());
-			itm.y = 15;
+			itm.y = 115;
 			itm.x = xx;
-			xx+=115;
-			this.addItems[i+1] = itm;
+			itm.width = 0.8;
+			itm.height = 0.8;
+			xx += 125;
+			this.addItems[i + 1] = itm;
 		}
 
 		this.on('removed ', this.removed);
 	}
 
-	setStep(num:number) {
-		for(let i=1;i<=num;i++) {
+	setStep(num: number) {
+		for (let i = 1; i <= num; i++) {
 			this.addItems[i].active();
 		}
 	}
@@ -154,10 +171,13 @@ class BonusLine extends PIXI.Sprite{
 
 }
 
-class BonusItem extends PIXI.Sprite{
-	cont:PIXI.Sprite;
-	state1:PIXI.Sprite;
-	state2:PIXI.Sprite;
+/**
+ * Bonus star class
+ */
+class BonusItem extends PIXI.Sprite {
+	cont: PIXI.Sprite;
+	state1: PIXI.Sprite;
+	state2: PIXI.Sprite;
 
 	constructor() {
 		super();
@@ -166,9 +186,10 @@ class BonusItem extends PIXI.Sprite{
 		//
 
 		this.cont = this.addChild(new PIXI.Sprite());
-
-		this.state1 = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus1.png")));
-		this.state2 = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus2.png")));
+		//emptry bronze
+		this.state1 = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/empty_bonus_star.png")));
+		//filled bronze
+		this.state2 = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/filled_bonus_star.png")));
 		this.state2.visible = false;
 
 		this.on('removed ', this.removed);
@@ -185,9 +206,12 @@ class BonusItem extends PIXI.Sprite{
 
 }
 
-class BonusData extends PIXI.Sprite{
-	cont:PIXI.Sprite;
-	task:PIXI.Text;
+/**
+ * task for bonus with rounded background
+ */
+class BonusData extends PIXI.Sprite {
+	cont: PIXI.Sprite;
+	task: PIXI.Text;
 
 	constructor() {
 		super();
@@ -211,6 +235,7 @@ class BonusData extends PIXI.Sprite{
 
 		this.cont = this.addChild(new PIXI.Sprite());
 
+		//background image for weekly task 👇
 		const back = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus_back_info.png")));
 		back.x = 0;
 		back.y = 0;
@@ -223,9 +248,9 @@ class BonusData extends PIXI.Sprite{
 		this.on('removed ', this.removed);
 	}
 
-	setDay(num:number) {
+	setDay(num: number) {
 		this.task.text = `Login For 7 Days (${num}/7)`;
-		this.task.x = 165 - (this.task.width/2);
+		this.task.x = 165 - (this.task.width / 2);
 	}
 
 	removed() {

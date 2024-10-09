@@ -118,3 +118,7 @@
 .tab-transition {
     cursor: pointer;
 }
+
+.bonus-mask {
+    transition: transform 0.3s;
+}
