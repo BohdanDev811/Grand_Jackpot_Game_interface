@@ -14,15 +14,15 @@ export class BonusWheel extends PIXI.Sprite {
 	back: PIXI.Sprite = new PIXI.Sprite();
 	data: any = new PIXI.Sprite();
 	text2: PIXI.Sprite = new PIXI.Sprite();
-	// trunc: PIXI.Sprite = new PIXI.Sprite();
 	help: PIXI.Sprite = new PIXI.Sprite();
 	remainder: any = new PIXI.Sprite();
 	progressPanel: PIXI.Sprite = new PIXI.Sprite()
-	dailyTab: any = new PIXI.Sprite()
-	weeklyTab: any = new PIXI.Sprite()
+	dailyTab: any;
+	weeklyTab: any;
+	tabCenter: any = new PIXI.Sprite();
 
 	HIDE_BONUS: any = null;
-	isDaily: boolean = false
+	state = { isDaily: true }
 
 	constructor(hideBonus: any) {
 		super();
@@ -36,9 +36,10 @@ export class BonusWheel extends PIXI.Sprite {
 
 
 	async build() {
-
 		//
+
 		this.addChild(this.black);
+
 		this.cont = this.addChild(new PIXI.Sprite());
 		this.conttitle = this.addChild(new PIXI.Sprite());
 
@@ -61,57 +62,77 @@ export class BonusWheel extends PIXI.Sprite {
 		this.progressPanel.x = 900;
 		this.progressPanel.y = -500
 
-		this.title = this.addChild(new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/popup_title_daily.png")));
+		this.title = this.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${this.state.isDaily ? "popup_title_daily" : "popup_title_weekly"}.png`)));
 		this.title.x = 800;
-		this.title.y = 110
-		this.title.width = 570
-		this.title.height = 130
+		this.title.y = 110;
+		this.title.width = 570;
+		this.title.height = 130;
 
-		this.dailyTab = this.data.addChild(
-			this.isDaily
-				? new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/daily_tab_active.png"))
-				: new ButtonItem("images/frenzy/bonus/to_daily_tab.png", () => {
-					EE.emit("IS_DAILY", true)
-					this.isDaily = true
-				})
-		)
-		this.dailyTab.y = -200
-		this.dailyTab.x = -PAGE_SIZE_DEFAULT.width / 2
+		// Create daily and weekly tabs
+		this.dailyTab = new Tab(
+			"images/frenzy/bonus/daily_tab_active.png",
+			"images/frenzy/bonus/to_daily_tab.png",
+			() => this.toggleTab(true)
+		);
+		this.data.addChild(this.dailyTab);
+		this.dailyTab.y = -500;
+		this.dailyTab.x = -PAGE_SIZE_DEFAULT.width / 2;
 
-		this.weeklyTab = this.data.addChild(
-			!this.isDaily
-				? new PIXI.Sprite(PIXI.Texture.from("images/frenzy/bonus/weekly_tab_active.png"))
-				: new ButtonItem("images/frenzy/bonus/to_weekly_tab.png", () => {
-					EE.emit("IS_DAILY", false)
-					this.isDaily = false
-				})
-		)
-		this.weeklyTab.y = 200
-		this.weeklyTab.x = -PAGE_SIZE_DEFAULT.width / 2
+		this.weeklyTab = new Tab(
+			"images/frenzy/bonus/weekly_tab_active.png",
+			"images/frenzy/bonus/to_weekly_tab.png",
+			() => this.toggleTab(false)
+		);
+		this.data.addChild(this.weeklyTab);
+		this.weeklyTab.y = -500 + (this.state.isDaily ? 200 : 150) + 20;
+		this.weeklyTab.x = -PAGE_SIZE_DEFAULT.width / 2;
 
-		this.help = this.data.addChild(new ButtonItem("images/frenzy/bonus/help.png", () => {
+		// Set initial active tab
+		this.updateTabs();
 
-		}))
-		this.help.x = (PAGE_SIZE_DEFAULT.width / 2) - 610;
 
+		this.help = this.conttitle.addChild(new ButtonItem("images/frenzy/bonus/help.png", () => {
+			// Add functionality for help button here
+		}));
+		this.help.x = (PAGE_SIZE_DEFAULT.width / 2) - 760;
 
 		this.close = this.data.addChild(new ButtonItem("images/frenzy/bonus_close.png", () => {
 			if (this.HIDE_BONUS) this.HIDE_BONUS();
 		}));
 
 		this.close.x = (PAGE_SIZE_DEFAULT.width / 2) + 180;
-		this.close.y = -(PAGE_SIZE_DEFAULT.height / 2 + 700)
+		this.close.y = -(PAGE_SIZE_DEFAULT.height / 2 + 700);
 
 		//TODO:
 		const curday = 3;
 		this.line.setStep(curday);
-		this.data.setDay(327242.54);
-		this.remainder.setUserCnt(101)
+		this.data.setTotalCoin(327242.54);
+		this.remainder.setUserCnt(101);
 
 		EE.addListener("RESIZE", this.onResize);
-		this.on('removed ', this.removed);
+		this.on('removed', this.removed);
 		//
 		EE.emit('FORCE_RESIZE');
+	}
+
+	toggleTab(isDaily: boolean) {
+		this.state.isDaily = isDaily;
+		this.updateTabs();
+		this.title.texture = PIXI.Texture.from(`images/frenzy/bonus/${this.state.isDaily ? "popup_title_daily" : "popup_title_weekly"}.png`);
+	}
+
+	updateTabs() {
+		this.dailyTab.setActive(this.state.isDaily);
+		this.weeklyTab.setActive(!this.state.isDaily);
+		// Position the weekly tab below the daily tab with a space of 50 pixels
+
+		
+		this.weeklyTab.y = -500 + (this.state.isDaily ? 200 : 150) + 20; // Add 50 pixels space
+	}
+
+	setState(newState: any) {
+		this.state = { ...this.state, ...newState }
+		this.build()
 	}
 
 	removed() {
@@ -128,16 +149,14 @@ export class BonusWheel extends PIXI.Sprite {
 		this.cont.y = (data.h / data.scale) - 550;
 		this.back.y = -(data.h / data.scale) / 2 + 100;
 		this.close.y = -(data.h / data.scale) / 2 - 100;
-		// this.trunc.y = (data.h / data.scale) / 2 - 360;
 		this.line.y = (data.h / data.scale) / 2 - 80;
 		this.data.y = (data.h / data.scale) / 2 + 75;
 		this.button.y = (data.h / data.scale) / 2 + 130;
-		// this.text2.y = (data.h / data.scale) / 2 + 260;
 		this.title.y = (data.h / data.scale) / 2 - 430
 		this.title.x = (data.w / data.scale) / 2 - 350
-		// this.help.x = (data.w / data.scale) / 2 + 200
-		this.help.y = -(data.h / data.scale) / 2 + 10
+		this.help.y = (data.h / data.scale) / 2 - 460
 		this.remainder.y = (data.h / data.scale) / 2 + 300;
+		this.updateTabs()
 
 	}
 
@@ -260,7 +279,7 @@ class BonusData extends PIXI.Sprite {
 	constructor() {
 		super();
 		this.removed = this.removed.bind(this);
-		this.setDay = this.setDay.bind(this);
+		this.setTotalCoin = this.setTotalCoin.bind(this);
 
 		const style = new PIXI.TextStyle({
 			fontFamily: "Bronzier",
@@ -289,12 +308,12 @@ class BonusData extends PIXI.Sprite {
 		this.task = this.cont.addChild(new PIXI.Text("", style));
 		this.task.y = 10;
 
-		this.setDay(1);
+		this.setTotalCoin(1);
 
 		this.on('removed ', this.removed);
 	}
 
-	setDay(num: number) {
+	setTotalCoin(num: number) {
 		this.task.text = `${num}`;
 		this.task.x = - (this.task.width / 2) + 100;
 		this.task.y = 131
@@ -385,77 +404,113 @@ class ProgressPanel extends PIXI.Sprite {
 	cont: PIXI.Sprite;
 	isDaily: boolean = true; // whether daily or weekly
 	standard = {
-		weekly: [24, 500, 300, 300, 5],
-		daily: [4, 6000, 5000, 5000, 150]
+	  weekly: [24, 500, 300, 300, 5],
+	  daily: [4, 6000, 5000, 5000, 150]
 	}
 	input = [4, 2500, 4600, 2500, 80]
 	space = [163, 155, 155, 147, 0]
-
+	back: any = PIXI.Sprite
+  
 	constructor() {
-		super();
-		this.removed = this.removed.bind(this);
-		this.setIsDaily = this.setIsDaily.bind(this);
-		this.setInput = this.setInput.bind(this);
-
-		// const style = new PIXI.TextStyle({
-		// 	fontFamily: "Bronzier",
-		// 	fontSize: "53px",
-		// 	fill: [
-		// 		"#FFDDFD",
-		// 		"#FF64F6",
-		// 	],
-		// 	dropShadow: true,
-		// 	dropShadowBlur: 1,
-		// 	dropShadowColor: "#000000",
-		// 	dropShadowDistance: 3,
-		// 	align: "center",
-		// });
-		//
-
-		this.cont = this.addChild(new PIXI.Sprite());
-
-		//background image for weekly task 👇
-		const back = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${this.isDaily ? "daily" : "weekly"}_progress_bar.png`)));
-		back.width = 600
-		// back.y = - 500
-		back.height = 1000
-
-		let _y = 237
-		for (let i = 0; i < 5; i++) {
-			const total = this.standard[this.isDaily ? "daily" : "weekly"][i];
-			const cur = this.input[i]
-
-			const prog = Math.floor(cur / total * 10)
-			const bar = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${prog}.png`)))
-
-			bar.width = cur / total * 225
-			bar.height = 40
-			bar.x = 75
-			bar.y = _y
-
-			const status = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${prog === 10 ? "btn_completed" : "btn_inprogress"}.png`)))
-			status.x = 350
-			status.y = _y - 40
-			status.width = 180
-			status.height = 65
-			_y += this.space[i]
-		}
-
-
-		this.on('removed ', this.removed);
+	  super();
+	  this.removed = this.removed.bind(this);
+	  this.setIsDaily = this.setIsDaily.bind(this);
+	  this.setInput = this.setInput.bind(this);
+  
+	  this.cont = this.addChild(new PIXI.Sprite());
+  
+	  this.back = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${this.isDaily ? "daily" : "weekly"}_progress_bar.png`)));
+	  this.back.width = 600
+	  // this.back.y = - 500
+	  this.back.height = 1000
+  
+	  this.updateProgressBar();
+  
+	  this.on('removed ', this.removed);
 	}
-
-	setInput(num: number[]) {
-		this.input = [...num];
+  
+	updateProgressBar() {
+	  this.cont.removeChildren();
+	  this.back.Texture = PIXI.Texture.from(`images/frenzy/bonus/${this.isDaily ? "daily" : "weekly"}_progress_bar.png`)
+	  
+	  this.back = this.cont.addChild(this.back);
+	  this.back.width = 600
+	  // this.back.y = - 500
+	  this.back.height = 1000
+  
+	  let _y = 237
+	  for (let i = 0; i < 5; i++) {
+		const total = this.standard[this.isDaily ? "daily" : "weekly"][i];
+		const cur = this.input[i]
+  
+		const prog = Math.floor(cur / total * 10)
+		const bar = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${prog}.png`)))
+  
+		bar.width = cur / total * 225
+		bar.height = 40
+		bar.x = 75
+		bar.y = _y
+  
+		const status = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${prog === 10 ? "btn_completed" : "btn_inprogress"}.png`)))
+		status.x = 350
+		status.y = _y - 40
+		status.width = 180
+		status.height = 65
+		_y += this.space[i]
+	  }
 	}
-
+  
 	setIsDaily(sort: boolean) {
-		this.isDaily = sort
+	  this.isDaily = sort
+	  this.updateProgressBar()
 	}
-
+  
+	setInput(num: number[]) {
+	  this.input = [...num];
+	  this.updateProgressBar()
+	}
+  
 	removed() {
-		//EE.removeListener("TICKER", this.onSelectWheelAnimate);
-		this.cont.removeChildren();
+	  //EE.removeListener("TICKER", this.onSelectWheelAnimate);
+	  this.cont.removeChildren();
+	}
+  }
+
+class Tab extends PIXI.Sprite {
+	isActive: boolean;
+	activeTexture: string;
+	inactiveTexture: string;
+	onClick: () => void;
+
+	constructor(activeTexture: string, inactiveTexture: string, onClick: () => void) {
+		super();
+		this.activeTexture = activeTexture;
+		this.inactiveTexture = inactiveTexture;
+		this.onClick = onClick;
+		this.isActive = false;
+
+		this.interactive = true;
+		this.buttonMode = true;
+		this.on("click", this.handleClick);
+		this.updateTexture();
 	}
 
+	handleClick() {
+		this.onClick();
+	}
+
+	setActive(active: boolean) {
+		this.isActive = active;
+		this.updateTexture();
+	}
+
+	updateTexture() {
+		this.texture = PIXI.Texture.from(this.isActive ? this.activeTexture : this.inactiveTexture);
+	}
+
+	getHeight() {
+		const texture = this.isActive ? this.activeTexture : this.inactiveTexture;
+		const sprite = new PIXI.Sprite(PIXI.Texture.from(texture));
+		return sprite.height;
+	}
 }
