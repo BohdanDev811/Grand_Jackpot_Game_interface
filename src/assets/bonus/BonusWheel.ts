@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import { ButtonItem } from "../gui/ButtonItem";
 import { EE } from "../../App";
+import { gsap } from 'gsap';
 import { PAGE_SIZE_DEFAULT } from "../../common/Config";
 
 export class BonusWheel extends PIXI.Sprite {
@@ -16,7 +17,7 @@ export class BonusWheel extends PIXI.Sprite {
 	text2: PIXI.Sprite = new PIXI.Sprite();
 	help: PIXI.Sprite = new PIXI.Sprite();
 	remainder: any = new PIXI.Sprite();
-	progressPanel: PIXI.Sprite = new PIXI.Sprite()
+	progressPanel: any = new PIXI.Sprite()
 	dailyTab: any;
 	weeklyTab: any;
 	tabCenter: any = new PIXI.Sprite();
@@ -62,7 +63,9 @@ export class BonusWheel extends PIXI.Sprite {
 		this.progressPanel.x = 900;
 		this.progressPanel.y = -500
 
-		this.title = this.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${this.state.isDaily ? "popup_title_daily" : "popup_title_weekly"}.png`)));
+		this.title = this.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${this.state.isDaily
+			? "popup_title_daily"
+			: "popup_title_weekly"}.png`)));
 		this.title.x = 800;
 		this.title.y = 110;
 		this.title.width = 570;
@@ -108,6 +111,7 @@ export class BonusWheel extends PIXI.Sprite {
 		this.line.setStep(curday);
 		this.data.setTotalCoin(327242.54);
 		this.remainder.setUserCnt(101);
+		this.progressPanel.setIsDaily(this.state.isDaily)
 
 		EE.addListener("RESIZE", this.onResize);
 		this.on('removed', this.removed);
@@ -116,17 +120,38 @@ export class BonusWheel extends PIXI.Sprite {
 	}
 
 	toggleTab(isDaily: boolean) {
-		this.state.isDaily = isDaily;
-		this.updateTabs();
-		this.title.texture = PIXI.Texture.from(`images/frenzy/bonus/${this.state.isDaily ? "popup_title_daily" : "popup_title_weekly"}.png`);
+		if (this.state.isDaily !== isDaily) {
+			this.state.isDaily = isDaily;
+
+			// Scale down the current active tab smoothly
+			const activeTab = isDaily ? this.weeklyTab : this.dailyTab;
+			const newTab = isDaily ? this.dailyTab : this.weeklyTab;
+
+			gsap.to(activeTab.scale, { x: 0.95, y: 0.95, duration: 0.6, ease: "sine.inOut" });
+			gsap.to(activeTab, { x: activeTab.x + 10, duration: 0.6, ease: "sine.inOut" }); // subtle shift
+
+			// After scaling down, switch tabs and scale up the new tab
+			gsap.delayedCall(0.45, () => {
+				this.updateTabs();
+
+				// New tab grows smoothly
+				newTab.scale.set(0.77); // Start smaller for the scale-in animation
+				gsap.to(newTab.scale, { x: 1, y: 1, duration: 0.6, ease: "sine.inOut" });
+				gsap.to(newTab, { x: newTab.x - 10, duration: 0.6, ease: "sine.inOut" }); // shift back
+			});
+
+			// Update other UI elements as necessary
+			this.progressPanel.setIsDaily(this.state.isDaily);
+			this.title.texture = PIXI.Texture.from(`images/frenzy/bonus/popup_title_${this.state.isDaily ? "daily" : "weekly"}.png`);
+		}
 	}
+
+
 
 	updateTabs() {
 		this.dailyTab.setActive(this.state.isDaily);
 		this.weeklyTab.setActive(!this.state.isDaily);
 		// Position the weekly tab below the daily tab with a space of 50 pixels
-
-		
 		this.weeklyTab.y = -500 + (this.state.isDaily ? 200 : 150) + 20; // Add 50 pixels space
 	}
 
@@ -162,37 +187,6 @@ export class BonusWheel extends PIXI.Sprite {
 
 }
 
-/**
- * bonus box of jwelery
- */
-// class Trunc extends PIXI.Sprite {
-// 	cont: PIXI.Sprite;
-
-// 	/**
-// 	 * New tag icon
-// 	 */
-// 	constructor() {
-// 		super();
-// 		//
-// 		this.cont = this.addChild(new PIXI.Sprite());
-// 		const json0 = PIXI.Loader.shared.resources["images/frenzy/anim/trunc.json"].spritesheet;
-// 		const array0: any = [];
-// 		if (json0) {
-// 			Object.keys(json0.textures).sort().forEach((key) => {
-// 				array0.push(json0.textures[key]);
-// 			});
-// 		}
-
-// 		const animate0 = new PIXI.AnimatedSprite(array0);
-// 		animate0.animationSpeed = 0.2;
-// 		animate0.loop = true;
-// 		//animate0.y = -3;
-// 		this.cont.addChild(animate0);
-// 		animate0.play();
-
-// 	}
-
-// }
 
 /**
  * Background of bonus stars
@@ -294,7 +288,6 @@ class BonusData extends PIXI.Sprite {
 			dropShadowDistance: 3,
 			align: "center",
 		});
-		//
 
 		this.cont = this.addChild(new PIXI.Sprite());
 
@@ -335,6 +328,7 @@ class RemainingTime extends PIXI.Sprite {
 	cont: PIXI.Sprite;
 	task: PIXI.Text;
 	remain: PIXI.Text;
+	targetTime: number = 234523445;
 
 	constructor() {
 		super();
@@ -372,10 +366,18 @@ class RemainingTime extends PIXI.Sprite {
 		this.remain = this.cont.addChild(new PIXI.Text("", style));
 		this.remain.y = -13
 
-		this.setDay("3D, 11:31:56");
 		this.setUserCnt(101)
 
 		this.on('removed ', this.removed);
+		const remainTime = setInterval(() => {
+			if (this.targetTime <= 1000) clearInterval(remainTime)
+			const days = Math.floor(this.targetTime / 1000 / 60 / 60 / 24);
+			const hours = Math.floor(this.targetTime / 1000 / 60 / 60) % 24;
+			const minutes = Math.floor(this.targetTime / 1000 / 60) % 60;
+			const seconds = Math.floor(this.targetTime / 1000) % 60;
+			this.setDay(`${days}D, ${hours < 10 ? ("0" + hours) : hours}:${minutes < 10 ? ("0" + minutes) : minutes}:${seconds < 10 ? ("0" + seconds) : seconds}`);
+			this.targetTime -= 1000
+		}, 1000);
 	}
 
 	setDay(num: String) {
@@ -402,79 +404,90 @@ class RemainingTime extends PIXI.Sprite {
  */
 class ProgressPanel extends PIXI.Sprite {
 	cont: PIXI.Sprite;
-	isDaily: boolean = true; // whether daily or weekly
+	isDaily: boolean = false; // whether daily or weekly
 	standard = {
-	  weekly: [24, 500, 300, 300, 5],
-	  daily: [4, 6000, 5000, 5000, 150]
+		weekly: [24, 500, 300, 300, 5],
+		daily: [4, 6000, 5000, 5000, 150]
 	}
-	input = [4, 2500, 4600, 2500, 80]
-	space = [163, 155, 155, 147, 0]
-	back: any = PIXI.Sprite
-  
+	input = [4, 400, 200, 300, 4]
+	space = [163, 155, 155, 155, 0]
+	back: PIXI.Sprite; // Declare back as PIXI.Sprite
+
 	constructor() {
-	  super();
-	  this.removed = this.removed.bind(this);
-	  this.setIsDaily = this.setIsDaily.bind(this);
-	  this.setInput = this.setInput.bind(this);
-  
-	  this.cont = this.addChild(new PIXI.Sprite());
-  
-	  this.back = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${this.isDaily ? "daily" : "weekly"}_progress_bar.png`)));
-	  this.back.width = 600
-	  // this.back.y = - 500
-	  this.back.height = 1000
-  
-	  this.updateProgressBar();
-  
-	  this.on('removed ', this.removed);
+		super();
+		this.removed = this.removed.bind(this);
+		this.setIsDaily = this.setIsDaily.bind(this);
+		this.setInput = this.setInput.bind(this);
+
+		this.cont = new PIXI.Sprite();
+		this.addChild(this.cont); // Add cont to the display list of ProgressPanel
+
+		// Initialize back as PIXI.Sprite with initial texture
+		this.back = new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${this.isDaily ? "daily" : "weekly"}_progress_bar.png`));
+		this.back.width = 600;
+		this.back.height = 1000;
+		this.cont.addChild(this.back); // Add back to cont
+
+		this.updateProgressBar();
+
+		this.on('removed', this.removed);
 	}
-  
+
 	updateProgressBar() {
-	  this.cont.removeChildren();
-	  this.back.Texture = PIXI.Texture.from(`images/frenzy/bonus/${this.isDaily ? "daily" : "weekly"}_progress_bar.png`)
-	  
-	  this.back = this.cont.addChild(this.back);
-	  this.back.width = 600
-	  // this.back.y = - 500
-	  this.back.height = 1000
-  
-	  let _y = 237
-	  for (let i = 0; i < 5; i++) {
-		const total = this.standard[this.isDaily ? "daily" : "weekly"][i];
-		const cur = this.input[i]
-  
-		const prog = Math.floor(cur / total * 10)
-		const bar = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${prog}.png`)))
-  
-		bar.width = cur / total * 225
-		bar.height = 40
-		bar.x = 75
-		bar.y = _y
-  
-		const status = this.cont.addChild(new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${prog === 10 ? "btn_completed" : "btn_inprogress"}.png`)))
-		status.x = 350
-		status.y = _y - 40
-		status.width = 180
-		status.height = 65
-		_y += this.space[i]
-	  }
+		this.cont.removeChildren(); // Remove previous children (not necessary if you're updating)
+
+		// Initialize back as PIXI.Sprite with initial texture
+		this.back.texture = PIXI.Texture.from(`images/frenzy/bonus/${this.isDaily ? "daily" : "weekly"}_progress_bar.png`);
+		this.back.width = 600;
+		this.back.height = 1000;
+		this.cont.addChild(this.back); // Add back to cont
+
+		let _y = 237;
+		for (let i = 0; i < 5; i++) {
+			const total = this.standard[this.isDaily ? "daily" : "weekly"][i];
+			const cur = this.input[i];
+
+			const prog = Math.floor(cur / total * 10);
+			const bar = new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${prog}.png`));
+			bar.width = 0; // Initialize width to 0
+			bar.height = 40;
+			bar.x = 75;
+			bar.y = _y;
+			this.cont.addChild(bar);
+
+			// Animate the progress bar
+			gsap.to(bar, {
+				width: cur / total * 225,
+				duration: 0.5,
+				ease: 'power2.out',
+			});
+
+			const status = new PIXI.Sprite(PIXI.Texture.from(`images/frenzy/bonus/${prog === 10 ? "btn_completed" : "btn_inprogress"}.png`));
+			status.x = 350;
+			status.y = _y - 40;
+			status.width = 180;
+			status.height = 65;
+			this.cont.addChild(status);
+
+			_y += this.space[i];
+		}
 	}
-  
+
 	setIsDaily(sort: boolean) {
-	  this.isDaily = sort
-	  this.updateProgressBar()
+		this.isDaily = sort;
+		this.updateProgressBar();
 	}
-  
+
 	setInput(num: number[]) {
-	  this.input = [...num];
-	  this.updateProgressBar()
+		this.input = [...num];
+		this.updateProgressBar();
 	}
-  
+
 	removed() {
-	  //EE.removeListener("TICKER", this.onSelectWheelAnimate);
-	  this.cont.removeChildren();
+		this.cont.removeChildren();
 	}
-  }
+}
+
 
 class Tab extends PIXI.Sprite {
 	isActive: boolean;
@@ -506,11 +519,5 @@ class Tab extends PIXI.Sprite {
 
 	updateTexture() {
 		this.texture = PIXI.Texture.from(this.isActive ? this.activeTexture : this.inactiveTexture);
-	}
-
-	getHeight() {
-		const texture = this.isActive ? this.activeTexture : this.inactiveTexture;
-		const sprite = new PIXI.Sprite(PIXI.Texture.from(texture));
-		return sprite.height;
 	}
 }
