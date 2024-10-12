@@ -69,6 +69,7 @@ class App extends React.Component<{}, { MESSAGE: string }> {
 					//EE.emit('SHOW_REG');
 					//EE.emit('SHOW_FREE_PLAY');
 					//EE.emit('SHOW_SIGNPHONE');
+					EE.emit("BONUS_WIN_RANK")
 					EE.emit('GO_GAME')
 				}, 1000);
 			}

@@ -37,7 +37,6 @@ export class BonusWheel extends PIXI.Sprite {
 
 
 	async build() {
-		//
 
 		this.addChild(this.black);
 
@@ -70,6 +69,11 @@ export class BonusWheel extends PIXI.Sprite {
 		this.title.y = 110;
 		this.title.width = 570;
 		this.title.height = 130;
+		this.title.interactive = true;
+		this.title.buttonMode = true;
+		this.title.on("click", () => {
+			EE.emit(this.state.isDaily ? "DAILY_BONUS_WIN" : "WEEKLY_BONUS_WIN")
+		})
 
 		// Create daily and weekly tabs
 		this.dailyTab = new Tab(
@@ -96,6 +100,7 @@ export class BonusWheel extends PIXI.Sprite {
 
 		this.help = this.conttitle.addChild(new ButtonItem("images/frenzy/bonus/help.png", () => {
 			// Add functionality for help button here
+			EE.emit(this.state.isDaily ? "DAILY_BONUS_RULE" : "WEEKLY_BONUS_RULE")
 		}));
 		this.help.x = (PAGE_SIZE_DEFAULT.width / 2) - 760;
 
@@ -115,7 +120,7 @@ export class BonusWheel extends PIXI.Sprite {
 
 		EE.addListener("RESIZE", this.onResize);
 		this.on('removed', this.removed);
-		//
+
 		EE.emit('FORCE_RESIZE');
 	}
 
@@ -307,10 +312,23 @@ class BonusData extends PIXI.Sprite {
 	}
 
 	setTotalCoin(num: number) {
-		this.task.text = `${num}`;
-		this.task.x = - (this.task.width / 2) + 100;
+		this.task.text = "0";
+		this.task.x = - (this.task.width / 2) + 20;
 		this.task.y = 131
 
+		const tween = gsap.to({}, {
+			duration: 1.5,
+			ease: "power2.out",
+			overwrite: true,
+			onStart: () => {
+				this.task.text = "0";
+			},
+			onUpdate: () => {
+				const progress = tween.progress();
+				const value = progress * num;
+				this.task.text = value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+			}
+		});
 	}
 
 	removed() {
@@ -360,7 +378,7 @@ class RemainingTime extends PIXI.Sprite {
 		back.width = 600
 		back.height = 90
 
-		this.task = this.cont.addChild(new PIXI.Text("", style));
+		this.task = this.cont.addChild(new PIXI.Text("-D, --:--:--", style));
 		this.task.y = -13
 
 		this.remain = this.cont.addChild(new PIXI.Text("", style));

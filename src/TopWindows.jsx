@@ -12,6 +12,8 @@ import { NewsWin } from "./windows/NewsWin";
 import { NewWebsiteWin } from "./windows/NewWebsite";
 import { BonusWin } from "./windows/BonusWin";
 import { UpdatePopupWin } from "./windows/UpdatePopupWin";
+import { BonusRule } from "./windows/BonusRule";
+import { BonusRank } from "./windows/BonusRank";
 
 let PAGE_LOGIN = "PAGE_LOGIN";
 let PAGE_REG = "PAGE_REG";
@@ -25,6 +27,11 @@ let PAGE_NEWS = "PAGE_NEWS";
 let PAGE_NEW_WEBSITE = "PAGE_NEW_WEBSITE";
 let PAGE_BONUS = "PAGE_BONUS";
 let PAGE_UPDATE_POPUP = 'PAGE_UPDATE_POPUP';
+let DAILY_BONUS_RULE = "DAILY_BONUS_RULE";
+let WEEKLY_BONUS_RULE = "WEEKLY_BONUS_RULE";
+let DAILY_BONUS_WIN = "DAILY_BONUS_WIN";
+let WEEKLY_BONUS_WIN = "WEEKLY_BONUS_WIN";
+let BONUS_WIN_RANK = "BONUS_WIN_RANK";
 
 class TopWindows extends React.Component {
     constructor(props) {
@@ -78,6 +85,26 @@ class TopWindows extends React.Component {
         EE.addListener("SHOW_UPDATE_POPUP", () => {
             this.setState({ CURRENT_PAGE: PAGE_UPDATE_POPUP });
         });
+
+        EE.addListener("WEEKLY_BONUS_WIN", () => {
+            this.setState({ CURRENT_PAGE: WEEKLY_BONUS_WIN });
+        });
+
+        EE.addListener("DAILY_BONUS_WIN", () => {
+            this.setState({ CURRENT_PAGE: DAILY_BONUS_WIN });
+        });
+
+        EE.addListener("WEEKLY_BONUS_RULE", () => {
+            this.setState({ CURRENT_PAGE: WEEKLY_BONUS_RULE });
+        });
+
+        EE.addListener("DAILY_BONUS_RULE", () => {
+            this.setState({ CURRENT_PAGE: DAILY_BONUS_RULE });
+        });
+
+        EE.addListener("BONUS_WIN_RANK", () => {
+            this.setState({ CURRENT_PAGE: BONUS_WIN_RANK });
+        });
     }
 
     goOpenChangePass() {
@@ -128,6 +155,16 @@ class TopWindows extends React.Component {
                 )}
                 {this.state.CURRENT_PAGE === PAGE_UPDATE_POPUP && (
                     <UpdatePopupWin onClose={this.onCloseAll} />
+                )}
+                {this.state.CURRENT_PAGE === BONUS_WIN_RANK && (
+                    <BonusRank onClose={this.onCloseAll} />
+                )}
+                {(this.state.CURRENT_PAGE === DAILY_BONUS_RULE || this.state.CURRENT_PAGE === WEEKLY_BONUS_RULE) && (
+                    <BonusRule isDaily={this.state.CURRENT_PAGE === DAILY_BONUS_RULE} onClose={this.onCloseAll} />
+                )}
+                {console.log(this.state.CURRENT_PAGE)}
+                {(this.state.CURRENT_PAGE === DAILY_BONUS_WIN || this.state.CURRENT_PAGE === WEEKLY_BONUS_WIN) && (
+                    <BonusWin isDaily={this.state.CURRENT_PAGE === DAILY_BONUS_WIN} onClose={this.onCloseAll} />
                 )}
             </div>
         );

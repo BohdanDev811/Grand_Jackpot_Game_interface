@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { PAGE_SIZE_DEFAULT } from "../common/Config";
 
-export class BonusWin extends React.Component {
+export class BonusRank extends React.Component {
   constructor(props) {
     super(props);
     this.onClose = this.onClose.bind(this);
@@ -32,7 +32,7 @@ export class BonusWin extends React.Component {
       console.log("after load");
 
       const cont = document.getElementsByClassName(
-        "modal-window-bonus_win"
+        "modal-window-bonus__scale-cont"
       )[0];
       if (cont) {
         setTimeout(() => {
@@ -45,7 +45,7 @@ export class BonusWin extends React.Component {
 
   onResize(data) {
     const cont = document.getElementsByClassName(
-      "modal-window-bonus_win"
+      "modal-window-bonus__scale-cont"
     )[0];
     const sc = Math.min(
       data.h / PAGE_SIZE_DEFAULT.height,
@@ -58,7 +58,7 @@ export class BonusWin extends React.Component {
 
   onClose() {
     const cont = document.getElementsByClassName(
-      "modal-window-bonus_win"
+      "modal-window-bonus__scale-cont"
     )[0];
 
     if (cont) {
@@ -73,7 +73,7 @@ export class BonusWin extends React.Component {
   render() {
     return (
       <div className="modal-window-bonus">
-        <div className="modal-window-bonus_win">
+        <div className="modal-window-bonus__scale-cont">
           <img
             className="modal-window-bonus__close"
             onClick={this.onClose}
@@ -83,7 +83,7 @@ export class BonusWin extends React.Component {
 
           <div className="carousel__image">
             <img
-              src={`images/frenzy/bonus/${this.props.isDaily ? "daily_bonus_win" : "weekly_bonus_win"}.png`}
+              src="images/frenzy/bonus_img_1.png"
               alt=""
               className="carousel__item"
             />

@@ -1,4 +1,4 @@
-.modal-window-bonus {
+.modal-window-bonus-rule {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,13 +9,22 @@
     z-index: 100000;
 }
 
-.modal-window-bonus_win {
-    position: relative;
-    width: 1600px;
+.modal-window-bonus__scale-cont {
+    position: fixed;
+    width: 1440px; /* Make sure this matches your content width */
+    height: 950px; /* Make sure this matches your content height */
     box-sizing: border-box;
+    transform-origin: center center;
     transition: transform 0.3s;
     transform: scale(0);
+    left: 50%;
+    top: 50%;
 }
+
+/* .modal-window-bonus__scale-cont .slick-list {
+    border: 10px solid #ecdc82;
+    border-radius: 80px;
+} */
 
 .modal-window-bonus__scale-cont .slick-slider .slick-dots {
     bottom: 60px;
@@ -116,4 +125,33 @@
 
 .bonus-mask {
     transition: transform 0.3s;
+}
+
+.scrollbar-container {
+    position: absolute;
+    height: 590px;
+    overflow-y: scroll;
+    top: 230px;
+    left: 100px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #140113;
+    border-radius: 3.5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #a00598;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #660a4f;
 }
