@@ -57,6 +57,11 @@ export class BonusWheel extends PIXI.Sprite {
 		this.remainder = this.conttitle.addChild(new RemainingTime());
 		this.remainder.x = -160;
 		this.remainder.y = 850;
+		this.remainder.interactive = true
+		this.remainder.buttonMode = true
+		this.remainder.on('pointerdown', () => { 
+			EE.emit("BONUS_WIN_RANK")
+		})
 
 		this.progressPanel = this.line.addChild(new ProgressPanel);
 		this.progressPanel.x = 900;
