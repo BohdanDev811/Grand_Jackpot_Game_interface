@@ -420,7 +420,6 @@ export let listImages: string[] = [
     "images/frenzy/bonus/to_weekly_tab.png",
     "images/frenzy/bonus/total_coin_bg.png",
     "images/frenzy/bonus/remaining_time_bg.png",
-    // Add all other asset URLs here
     "images/frenzy/bonus/0.png",
     "images/frenzy/bonus/1.png",
     "images/frenzy/bonus/2.png",
@@ -429,4 +428,6 @@ export let listImages: string[] = [
     "images/frenzy/bonus/5.png",
     "images/frenzy/bonus/btn_completed.png",
     "images/frenzy/bonus/btn_inprogress.png",
+    "images/frenzy/bonus/daily_progress_bar.png",
+    "images/frenzy/bonus/weekly_progress_bar.png",
 ];
