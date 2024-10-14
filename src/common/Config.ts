@@ -349,7 +349,7 @@ export function updateGames(val: any) {
     Games = val;
 }
 
-export const PAGE_SIZE_DEFAULT: {width: number; height: number} = {
+export const PAGE_SIZE_DEFAULT: { width: number; height: number } = {
     width: 1920,
     height: 1080,
 };
@@ -407,4 +407,26 @@ export let listImages: string[] = [
     "images/frenzy/news_img_2.png",
     "images/frenzy/updatePopup.png",
     "images/frenzy/update_btn.png",
+    "images/frenzy/bonus/bonus_bg.png",
+    "images/frenzy/bonus/popup_title_daily.png",
+    "images/frenzy/bonus/popup_title_weekly.png",
+    "images/frenzy/bonus/empty_bonus_star.png",
+    "images/frenzy/bonus/filled_bonus_star.png",
+    "images/frenzy/bonus/help.png",
+    "images/frenzy/bonus/bonus_close.png",
+    "images/frenzy/bonus/daily_tab_active.png",
+    "images/frenzy/bonus/to_daily_tab.png",
+    "images/frenzy/bonus/weekly_tab_active.png",
+    "images/frenzy/bonus/to_weekly_tab.png",
+    "images/frenzy/bonus/total_coin_bg.png",
+    "images/frenzy/bonus/remaining_time_bg.png",
+    // Add all other asset URLs here
+    "images/frenzy/bonus/0.png",
+    "images/frenzy/bonus/1.png",
+    "images/frenzy/bonus/2.png",
+    "images/frenzy/bonus/3.png",
+    "images/frenzy/bonus/4.png",
+    "images/frenzy/bonus/5.png",
+    "images/frenzy/bonus/btn_completed.png",
+    "images/frenzy/bonus/btn_inprogress.png",
 ];

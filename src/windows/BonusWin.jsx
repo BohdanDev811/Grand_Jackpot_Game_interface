@@ -4,7 +4,6 @@ import "../css/bonuswin.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import Slider from "react-slick";
 import { PAGE_SIZE_DEFAULT } from "../common/Config";
 
 export class BonusWin extends React.Component {
@@ -83,6 +82,7 @@ export class BonusWin extends React.Component {
 
           <div className="carousel__image">
             <img
+              draggable={false}
               src={`images/frenzy/bonus/${this.props.isDaily ? "daily_bonus_win" : "weekly_bonus_win"}.png`}
               alt=""
               className="carousel__item"

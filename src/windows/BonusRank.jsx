@@ -190,7 +190,7 @@ export class BonusRank extends React.Component {
             alt="Close"
           />
           <div className="carousel__image">
-            <img className="rank-bg" src="images/frenzy/bonus/rank_bg.png" alt="Rank Background" />
+            <img className="rank-bg" draggable={false} src="images/frenzy/bonus/rank_bg.png" alt="Rank Background" />
             <div className="rank-wrapper">
               {this.state.rankList.map(user => (
                 <div className="rank-control" key={user.id}>
