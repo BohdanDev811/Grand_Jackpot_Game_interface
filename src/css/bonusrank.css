@@ -133,51 +133,47 @@
     text-align: center;
 }
 
-.rank-control .user-container {
+.rank-control > .rank-content {
     position: absolute;
-    top: 10%;
-    left: 20%;
+    top: 10px;
     display: flex;
-    justify-content: start;
+    justify-content: left;
     align-items: center;
-    gap: 10%;
-    color: white;
 }
 
-.rank-control .user-container span {
-    font-size: 50px;
-    white-space: nowrap;
-    text-shadow: black 4px 6px 6px;
-}
-
-.carousel__image .rank-bg {
+.rank-content > .rank-num {
+    padding: 0 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
-    width: fit-content;
-    height: fit-content;
 }
 
-.rank-num-container .rank-num {
+.rank-content > .rank-num > span {
     position: absolute;
-    z-index: 20;
-    top: 8px;
-    width: 160px;
-    height: 160px;
-    left: 43px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.rank-num-container .rank-num span {
-    position: absolute;
+    padding-right: 4px;
+    text-align: center;
+    font-size: 60px;
     color: white;
-    width: 155px;
-    height: 160px;
-    left: 0;
+    text-shadow: 0 0 10px black;
+}
+
+.rank-content > .user-info {
     display: flex;
-    justify-content: center;
+    justify-content: left;
+    width: 640px;
     align-items: center;
-    top:0;
-    font-size: 58px;
-    text-shadow: 0 0 6px black;
+    gap: 20px;
+    font-size: 50px;
+    color: white;
+    text-shadow: 0 4px 12px black;
+}
+
+.rank-content > .cashback-info {
+    position: absolute;
+    right: -70px;
+    top: 10px;
+    font-size: 80px;
+    color: #d3b342;
+    text-shadow: 0 4px 12px black;
 }

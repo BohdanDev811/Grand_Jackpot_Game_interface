@@ -66,7 +66,7 @@ export class BonusRank extends React.Component {
     this.onClose = this.onClose.bind(this);
     this.state = {
       rankList: [
-        { id: 1, rank: 1, name: "BigDog23", score: 100, pic: null },
+        { id: 1, rank: 1, name: "BigDog23", score: 92, pic: null },
         { id: 2, rank: 2, name: "BlackBear", score: 90, pic: null },
         { id: 3, rank: 3, name: "Tiger", score: 80, pic: null },
         { id: 4, rank: 4, name: "Jeus K", score: 70, pic: null },
@@ -209,27 +209,21 @@ export class BonusRank extends React.Component {
             <div className="rank-wrapper">
               {this.state.rankList.map(user => (
                 <div className="rank-control" key={user.id}>
-                  {user.rank > 3 ?
-                    <div className="rank-num-container">
-                      <img src="images/frenzy/bonus/rank_bg_4_20.png" alt="" />
-                      <div className="rank-num">
-                        <img className="rank-frame" src="images/frenzy/bonus/rank_frame_4_20.png" alt="" />
-                        <span>{user.rank}</span>
-                      </div>
-                    </div> :
-                    <img
-                      className="rank-bg"
-                      draggable={false}
-                      src={`images/frenzy/bonus/rank_${user.rank}.png`}
-                      alt={`Rank ${user.rank}`}
-                    />}
-                  <div className="user-container">
-                    <img
-                      className="user-pic"
-                      src={`images/frenzy/bonus/${user.pic ? user.pic : "default_avatar.png"}`}
-                      alt="User"
-                    />
-                    <span>{user.name}</span>
+                  <img className="rank-bg" src={`images/frenzy/bonus/${user.rank > 3 ? "rank_4_20_bg" : ("rank_" + user.rank + "_bg")}.png`} alt="" />
+                  <div className="rank-content">
+                    <div className="rank-num">
+                      {user.rank > 3
+                        ? <><img src="images/frenzy/bonus/rank_frame_4_20.png" alt="" /><span>{user.rank}</span></>
+                        : <img src={`images/frenzy/bonus/rank${user.rank}.png`} alt="" />}
+                    </div>
+                    <div className="user-info">
+                      <img src={user.pic ? user.pic : "images/frenzy/bonus/default_avatar.png"} alt="" />
+                      <span>{user.name}</span>
+                    </div>
+                    <div className="cashback-info">
+                      <span>{user.score}%</span>
+                    </div>
+
                   </div>
                 </div>
               ))}
