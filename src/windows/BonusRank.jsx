@@ -71,6 +71,21 @@ export class BonusRank extends React.Component {
         { id: 3, rank: 3, name: "Tiger", score: 80, pic: null },
         { id: 4, rank: 4, name: "Jeus K", score: 70, pic: null },
         { id: 5, rank: 5, name: "Elsa B", score: 60, pic: null },
+        { id: 6, rank: 6, name: "Tiger", score: 54, pic: null },
+        { id: 7, rank: 7, name: "Jeus K", score: 52, pic: null },
+        { id: 8, rank: 8, name: "Elsa B", score: 50, pic: null },
+        { id: 9, rank: 9, name: "Tiger", score: 48, pic: null },
+        { id: 10, rank: 10, name: "Jeus K", score: 45, pic: null },
+        { id: 11, rank: 11, name: "Elsa B", score: 43, pic: null },
+        { id: 12, rank: 12, name: "Tiger", score: 41, pic: null },
+        { id: 13, rank: 13, name: "Jeus K", score: 39, pic: null },
+        { id: 14, rank: 14, name: "Elsa B", score: 32, pic: null },
+        { id: 15, rank: 15, name: "Tiger", score: 30, pic: null },
+        { id: 16, rank: 16, name: "Jeus K", score: 29, pic: null },
+        { id: 17, rank: 17, name: "Elsa B", score: 28, pic: null },
+        { id: 18, rank: 18, name: "Tiger", score: 27, pic: null },
+        { id: 19, rank: 19, name: "Jeus K", score: 26, pic: null },
+        { id: 20, rank: 20, name: "Elsa B", score: 21, pic: null },
       ],
     };
   }
@@ -194,12 +209,20 @@ export class BonusRank extends React.Component {
             <div className="rank-wrapper">
               {this.state.rankList.map(user => (
                 <div className="rank-control" key={user.id}>
-                  <img
-                    className="rank-bg"
-                    draggable={false}
-                    src={`images/frenzy/bonus/rank_${user.rank}.png`}
-                    alt={`Rank ${user.rank}`}
-                  />
+                  {user.rank > 3 ?
+                    <div className="rank-num-container">
+                      <img src="images/frenzy/bonus/rank_bg_4_20.png" alt="" />
+                      <div className="rank-num">
+                        <img className="rank-frame" src="images/frenzy/bonus/rank_frame_4_20.png" alt="" />
+                        <span>{user.rank}</span>
+                      </div>
+                    </div> :
+                    <img
+                      className="rank-bg"
+                      draggable={false}
+                      src={`images/frenzy/bonus/rank_${user.rank}.png`}
+                      alt={`Rank ${user.rank}`}
+                    />}
                   <div className="user-container">
                     <img
                       className="user-pic"

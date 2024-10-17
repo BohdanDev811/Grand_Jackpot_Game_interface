@@ -130,6 +130,7 @@
 .rank-control {
     position: relative;
     font-family: "Bronzier";
+    text-align: center;
 }
 
 .rank-control .user-container {
@@ -153,4 +154,30 @@
     position: relative;
     width: fit-content;
     height: fit-content;
+}
+
+.rank-num-container .rank-num {
+    position: absolute;
+    z-index: 20;
+    top: 8px;
+    width: 160px;
+    height: 160px;
+    left: 43px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rank-num-container .rank-num span {
+    position: absolute;
+    color: white;
+    width: 155px;
+    height: 160px;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top:0;
+    font-size: 58px;
+    text-shadow: 0 0 6px black;
 }
