@@ -14,6 +14,7 @@ import { BonusWin } from "./windows/BonusWin";
 import { UpdatePopupWin } from "./windows/UpdatePopupWin";
 import { BonusRule } from "./windows/BonusRule";
 import { BonusRank } from "./windows/BonusRank";
+import { ReferFriend } from "./windows/ReferFriend";
 
 let PAGE_LOGIN = "PAGE_LOGIN";
 let PAGE_REG = "PAGE_REG";
@@ -32,6 +33,7 @@ let WEEKLY_BONUS_RULE = "WEEKLY_BONUS_RULE";
 let DAILY_BONUS_WIN = "DAILY_BONUS_WIN";
 let WEEKLY_BONUS_WIN = "WEEKLY_BONUS_WIN";
 let BONUS_WIN_RANK = "BONUS_WIN_RANK";
+let REFER_FRIEND = "REFER_FRIEND";
 
 class TopWindows extends React.Component {
     constructor(props) {
@@ -105,6 +107,9 @@ class TopWindows extends React.Component {
         EE.addListener("BONUS_WIN_RANK", () => {
             this.setState({ CURRENT_PAGE: BONUS_WIN_RANK });
         });
+        EE.addListener("REFER_FRIEND", () => {
+            this.setState({ CURRENT_PAGE: REFER_FRIEND });
+        });
     }
 
     goOpenChangePass() {
@@ -155,6 +160,9 @@ class TopWindows extends React.Component {
                 )}
                 {this.state.CURRENT_PAGE === PAGE_UPDATE_POPUP && (
                     <UpdatePopupWin onClose={this.onCloseAll} />
+                )}
+                {this.state.CURRENT_PAGE === REFER_FRIEND && (
+                    <ReferFriend onClose={this.onCloseAll} />
                 )}
                 {this.state.CURRENT_PAGE === BONUS_WIN_RANK && (
                     <BonusRank onClose={this.onCloseAll} />

@@ -151,7 +151,8 @@ class CoinButton extends PIXI.Sprite{
 		this.cont.interactive = true;
 		this.cont.buttonMode = true;
 		this.cont.on('pointerdown', ()=>{
-			alert('click coin!');
+			// alert('click coin!');
+			EE.emit("REFER_FRIEND")
 		})
 	}
 
