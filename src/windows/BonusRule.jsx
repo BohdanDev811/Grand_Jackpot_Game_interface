@@ -84,7 +84,7 @@ export class BonusRule extends React.Component {
       <div className="modal-window-bonus-rule">
         <div className="modal-window-bonus__scale-cont">
           <img
-            className="modal-window-bonus__close"
+            className="modal-window-bonus_rule_close"
             onClick={this.onClose}
             src="images/frenzy/bonus_close_2.png"
             alt=""
