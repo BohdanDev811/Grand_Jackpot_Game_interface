@@ -104,7 +104,7 @@ export class ReferFriend extends React.Component {
       <div className="modal-window-refer-friend">
         <div className="modal-window-bonus__scale-cont">
           <img
-            className="modal-window-bonus__close"
+            className="modal-window-refer-friend__close"
             onClick={this.onClose}
             src="images/frenzy/bonus_close_2.png"
             alt=""
