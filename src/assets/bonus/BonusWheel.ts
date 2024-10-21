@@ -84,7 +84,7 @@ export class BonusWheel extends PIXI.Sprite {
 		this.title.height = 130;
 		this.title.interactive = true;
 		this.title.buttonMode = true;
-		this.title.on("click", () => {
+		this.title.on("pointerdown", () => {
 			EE.emit(this.state.isDaily ? "DAILY_BONUS_WIN" : "WEEKLY_BONUS_WIN");
 		});
 
@@ -168,8 +168,8 @@ export class BonusWheel extends PIXI.Sprite {
 		this.weeklyTab.setActive(!this.state.isDaily);
 		// Position the weekly tab below the daily tab with a consistent space
 		this.weeklyTab.y = -500 + (this.state.isDaily ? 200 : 150) + 20;
-		this.dailyTab.x = -PAGE_SIZE_DEFAULT.width / 2; // Set the x-position of the daily tab
-		this.weeklyTab.x = -PAGE_SIZE_DEFAULT.width / 2; // Set the x-position of the weekly tab
+		// this.dailyTab.x = -PAGE_SIZE_DEFAULT.width / 2; // Set the x-position of the daily tab
+		// this.weeklyTab.x = -PAGE_SIZE_DEFAULT.width / 2; // Set the x-position of the weekly tab
 	}
 
 	public setState(newState: any) {
@@ -189,11 +189,16 @@ export class BonusWheel extends PIXI.Sprite {
 		this.conttitle.y = 50;
 		this.cont.x = (data.w / data.scale) / 2;
 		this.cont.y = (data.h / data.scale) - 550;
+		this.weeklyTab.x = -(data.w / data.scale)/2 +150;
+		this.dailyTab.x = -(data.w / data.scale)/2 +150;
 		this.back.y = -(data.h / data.scale) / 2 + 100;
+		this.close.x = (data.w / data.scale) / 2 + 80;
+
 		this.close.y = -(data.h / data.scale) / 2 - 100;
 		this.line.y = (data.h / data.scale) / 2 - 80;
 		this.data.y = (data.h / data.scale) / 2 + 75;
 		this.button.y = (data.h / data.scale) / 2 + 130;
+		this.progressPanel.x = (data.w / data.scale) / 2 - 100
 		this.title.y = (data.h / data.scale) / 2 - 430;
 		this.title.x = (data.w / data.scale) / 2 - 350;
 		this.help.y = (data.h / data.scale) / 2 - 460;
@@ -528,7 +533,7 @@ class Tab extends PIXI.Sprite {
 
 		this.interactive = true;
 		this.buttonMode = true;
-		this.on("click", this.handleClick);
+		this.on("pointerdown", this.handleClick);
 		this.updateTexture();
 	}
 
