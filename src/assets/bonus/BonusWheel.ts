@@ -129,6 +129,7 @@ export class BonusWheel extends PIXI.Sprite {
 		this.data.setTotalCoin(327242.54);
 		this.remainder.setUserCnt(101);
 		this.progressPanel.setIsDaily(this.state.isDaily);
+		this.progressPanel.setInput([4, 6000, 5000, 5000, 150])
 
 		// Event Listeners
 		EE.addListener("RESIZE", this.onResize);
@@ -439,7 +440,7 @@ class ProgressPanel extends PIXI.Sprite {
 		daily: [4, 6000, 5000, 5000, 150]
 	}
 	input = [4, 400, 200, 300, 4]
-	space = [163, 155, 155, 155, 0]
+	space = [163, 155, 155, 147, 0]
 	back: PIXI.Sprite; // Declare back as PIXI.Sprite
 
 	constructor() {
